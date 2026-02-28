@@ -1,79 +1,154 @@
-import { Fish, MapPin, Phone, Facebook, Instagram, Youtube } from 'lucide-react';
+import { MapPin, Phone, Facebook, Instagram, Youtube, Mail, ChevronRight, FileText } from 'lucide-react';
+import Link from 'next/link';
 
 export default function Footer() {
+  const currentYear = new Date().getFullYear();
+
   return (
-    <footer className="mt-auto border-t border-gray-200 bg-white"> 
-      <div className="container mx-auto py-12 px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        
-        {/* Kolom 1: Informasi Utama */}
-        <div className="space-y-4">
+    <footer className="bg-gray-900 text-gray-300 border-t border-gray-800">
+      {/* Bagian Utama Footer */}
+      <div className="container mx-auto px-6 py-12 lg:py-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8">
+          
+          {/* Kolom 1: Brand & Deskripsi */}
+          <div className="space-y-6">
             <div className="flex items-center gap-3">
-              {/* Icon Box: Background Orange Muda */}
-              <div className="p-2 bg-orange-50 rounded-lg border border-orange-100">
-                  <Fish className="text-orange-600" size={24} />
-              </div>
-              {/* Teks Judul: Hitam */}
-              <span className="text-xl font-bold text-gray-900">WebKoi</span>
+              {/* LOGO PERUSAHAAN (Tanpa Kotak) */}
+              <img 
+                src="/logokoi.png" 
+                alt="Logo WebKoi" 
+                className="w-8 h-8 object-contain filter brightness-0 invert" 
+              />
+              <span className="text-2xl font-bold text-white tracking-tight">WebKoi</span>
             </div>
-            
-            <p className="font-semibold text-gray-700">Otoritas Sertifikasi Digital Koi</p>
-            
-            <div className="space-y-3 text-gray-600 text-sm">
-              <div className="flex items-start gap-3">
-                  <MapPin size={18} className="mt-0.5 flex-shrink-0 text-orange-600" />
-                  <span>Jl. Koi Juara No. 123, Kota Serang, Banten 42111</span>
-              </div>
-              <div className="flex items-start gap-3">
-                  <Phone size={18} className="mt-0.5 flex-shrink-0 text-orange-600" />
-                  <span>(0254) 123 4567</span>
-              </div>
+            <p className="text-gray-400 text-sm leading-relaxed">
+              Platform sertifikasi digital terpercaya untuk ikan Koi juara. 
+              Menjamin keaslian dan transparansi sejarah kepemilikan menggunakan teknologi Blockchain Ethereum.
+            </p>
+            <div className="flex gap-4 pt-2">
+              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="p-2 bg-gray-800 rounded-full hover:bg-blue-600 hover:text-white transition-all duration-300 group">
+                <Facebook size={18} />
+              </a>
+              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="p-2 bg-gray-800 rounded-full hover:bg-pink-600 hover:text-white transition-all duration-300 group">
+                <Instagram size={18} />
+              </a>
+              <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="p-2 bg-gray-800 rounded-full hover:bg-red-600 hover:text-white transition-all duration-300 group">
+                <Youtube size={18} />
+              </a>
             </div>
-        </div>
+          </div>
 
-        {/* Kolom 2: Tautan Navigasi */}
-        <div>
-            {/* Judul Kolom: Hitam dengan garis bawah abu-abu */}
-            <h3 className="text-sm font-bold text-gray-900 tracking-wider uppercase border-b border-gray-200 pb-2 inline-block mb-4">
-              Tautan Cepat
+          {/* Kolom 2: Tautan Cepat */}
+          <div>
+            <h3 className="text-white font-bold text-lg mb-6 relative inline-block">
+              Menu Utama
+              <span className="absolute -bottom-2 left-0 w-12 h-1 bg-orange-500 rounded-full"></span>
             </h3>
-            <ul className="space-y-3">
-              <li><a href="/" className="text-gray-600 hover:text-orange-600 transition font-medium">Beranda</a></li>
-              <li><a href="/check" className="text-gray-600 hover:text-orange-600 transition font-medium">Verifikasi Sertifikat</a></li>
-              <li><a href="#" className="text-gray-600 hover:text-orange-600 transition font-medium">Tentang Kami</a></li>
-            </ul>
-        </div>
-
-        {/* Kolom 3: Sosial Media */}
-        <div>
-            <h3 className="text-sm font-bold text-gray-900 tracking-wider uppercase border-b border-gray-200 pb-2 inline-block mb-4">
-              Tetap Terhubung
-            </h3>
-            <ul className="space-y-3">
+            <ul className="space-y-4 text-sm">
               <li>
-                  <a href="https://www.facebook.com/andika.attarfizrah/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-gray-600 hover:text-blue-600 transition font-medium">
-                  <Facebook size={20} /> Facebook
-                  </a>
+                <Link href="/" className="flex items-center gap-2 hover:text-orange-500 transition-colors group">
+                  <ChevronRight size={14} className="text-gray-600 group-hover:text-orange-500 transition-colors" />
+                  Beranda
+                </Link>
               </li>
               <li>
-                  <a href="https://www.instagram.com/andikaaaf_/?hl=id" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-gray-600 hover:text-pink-600 transition font-medium">
-                  <Instagram size={20} /> Instagram
-                  </a>
+                <Link href="/check" className="flex items-center gap-2 hover:text-orange-500 transition-colors group">
+                  <ChevronRight size={14} className="text-gray-600 group-hover:text-orange-500 transition-colors" />
+                  Cek Sertifikat
+                </Link>
               </li>
               <li>
-                  <a href="https://www.youtube.com/@andikaattarfizrah8609" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-gray-600 hover:text-red-600 transition font-medium">
-                  <Youtube size={20} /> Youtube
-                  </a>
+                <Link href="/dashboard-user/verification" className="flex items-center gap-2 hover:text-orange-500 transition-colors group">
+                  <ChevronRight size={14} className="text-gray-600 group-hover:text-orange-500 transition-colors" />
+                  Login Mitra
+                </Link>
+              </li>
+              <li>
+                <Link href="#" className="flex items-center gap-2 hover:text-orange-500 transition-colors group">
+                  <ChevronRight size={14} className="text-gray-600 group-hover:text-orange-500 transition-colors" />
+                  Tentang Kami
+                </Link>
               </li>
             </ul>
-        </div>
+          </div>
+
+          {/* Kolom 3: Layanan */}
+          <div>
+            <h3 className="text-white font-bold text-lg mb-6 relative inline-block">
+              Layanan
+              <span className="absolute -bottom-2 left-0 w-12 h-1 bg-orange-500 rounded-full"></span>
+            </h3>
+            <ul className="space-y-4 text-sm">
+              <li className="flex items-center gap-2 text-gray-400">
+                <div className="w-1.5 h-1.5 bg-gray-600 rounded-full"></div>
+                Sertifikasi Digital
+              </li>
+              <li className="flex items-center gap-2 text-gray-400">
+                <div className="w-1.5 h-1.5 bg-gray-600 rounded-full"></div>
+                Verifikasi Kepemilikan
+              </li>
+              <li className="flex items-center gap-2 text-gray-400">
+                <div className="w-1.5 h-1.5 bg-gray-600 rounded-full"></div>
+                Jejak Rekam (Traceability)
+              </li>
+              <li className="flex items-center gap-2 text-gray-400">
+                <div className="w-1.5 h-1.5 bg-gray-600 rounded-full"></div>
+                Transfer Aset
+              </li>
+            </ul>
+          </div>
+
+          {/* Kolom 4: Kontak Kami / Bantuan */}
+          <div>
+            <h3 className="text-white font-bold text-lg mb-6 relative inline-block">
+              Bantuan
+              <span className="absolute -bottom-2 left-0 w-12 h-1 bg-orange-500 rounded-full"></span>
+            </h3>
+            <ul className="space-y-5 text-sm">
+              <li className="flex items-start gap-4">
+                <div className="p-2 bg-gray-800 rounded-lg text-orange-500 shrink-0">
+                  <MapPin size={18} />
+                </div>
+                <span className="leading-relaxed">Jl. Koi Juara No. 123, <br/>Kota Serang, Banten 42111</span>
+              </li>
+              <li className="flex items-center gap-4">
+                <div className="p-2 bg-gray-800 rounded-lg text-orange-500 shrink-0">
+                  <Phone size={18} />
+                </div>
+                <span>(0254) 123 4567</span>
+              </li>
+              <li className="flex items-center gap-4">
+                 <div className="p-2 bg-gray-800 rounded-lg text-orange-500 shrink-0">
+                  <Mail size={18} />
+                </div>
+                <a href="mailto:info@webkoi.com" className="hover:text-orange-500 transition-colors">info@webkoi.com</a>
+              </li>
+              
+              {/* ITEM KE-4: FORMULIR PENGADUAN (Dengan Icon) */}
+              <li className="flex items-center gap-4">
+                 <div className="p-2 bg-gray-800 rounded-lg text-orange-500 shrink-0">
+                  <FileText size={18} />
+                </div>
+                <Link href="/report" className="hover:text-orange-500 transition-colors">
+                    Formulir Pengaduan
+                </Link>
+              </li>
+
+            </ul>
+          </div>
+
         </div>
       </div>
-      
-      {/* Bagian Copyright: Background Abu-abu Sangat Muda */}
-      <div className="border-t border-gray-200 bg-gray-50">
-        <div className="container mx-auto py-6 px-4 text-center text-gray-500 text-sm font-medium">
-            <p>&copy; {new Date().getFullYear()} Andika Attar Fizrah. All rights reserved.</p>
+
+      {/* Bagian Copyright */}
+      <div className="border-t border-gray-800 bg-gray-950">
+        <div className="container mx-auto px-6 py-6 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-500">
+          <p>&copy; {currentYear} WebKoi. Dibuat oleh <span className="text-gray-400 font-medium">Andika Attar Fizrah</span>.</p>
+          <div className="flex gap-6">
+            <Link href="/privacy-policy" className="hover:text-white transition-colors">Privacy Policy</Link>
+            <Link href="/terms-of-service" className="hover:text-white transition-colors">Terms of Service</Link>
+            <Link href="/cookie-policy" className="hover:text-white transition-colors">Cookie Policy</Link>
+          </div>
         </div>
       </div>
     </footer>

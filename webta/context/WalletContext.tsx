@@ -3,19 +3,19 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import toast from 'react-hot-toast';
 
-// --- PERBAIKAN UTAMA ADA DI SINI ---
-// Kita memberitahu TypeScript: "Tolong izinkan properti 'ethereum' di objek window"
+// Solusi TypeScript untuk window.ethereum
 declare global {
   interface Window {
-    ethereum: any; // Kita set 'any' biar fleksibel
+    ethereum: any;
   }
 }
 
 // --- CONFIG ADMIN ---
-// Ganti dengan alamat wallet kamu
+// Daftar wallet ini OTOMATIS dianggap sebagai Admin
 const ADMIN_WALLETS = [
-  "0x8626f6940E2eb28930eFb4CeF49B2d1F2C9C1199", // Akun #19 Hardhat (Contoh)
-  "0x71C7656EC7ab88b098defB751B7401B5f6d8976F"  // Wallet Asli Kamu
+  "0x8626f6940E2eb28930eFb4CeF49B2d1F2C9C1199", // Akun Hardhat #19
+  "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266", // Wallet Asli Kamu
+  // Tambahkan wallet lain di sini jika perlu
 ].map(addr => addr.toLowerCase());
 
 interface WalletContextType {
@@ -29,25 +29,29 @@ const WalletContext = createContext<WalletContextType | undefined>(undefined);
 
 export function WalletProvider({ children }: { children: ReactNode }) {
   const [account, setAccount] = useState<string | null>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  // Helper untuk set akun dan cek admin
+  const handleSetAccount = (address: string) => {
+    const lowerAddr = address.toLowerCase();
+    setAccount(lowerAddr);
+    
+    // Cek apakah wallet ini ada di daftar admin
+    if (ADMIN_WALLETS.includes(lowerAddr)) {
+        setIsAdmin(true);
+    } else {
+        setIsAdmin(false); // Bukan admin, tapi TETAP BOLEH CONNECT (untuk Breeder/Seller)
+    }
+  };
 
   // Cek koneksi saat refresh halaman
   useEffect(() => {
     const checkConnection = async () => {
-      // Cek dulu apakah window.ethereum ada (sekarang TS tidak akan marah)
       if (typeof window !== 'undefined' && window.ethereum) {
         try {
           const accounts = await window.ethereum.request({ method: 'eth_accounts' });
           if (accounts.length > 0) {
-            const connectedAccount = accounts[0].toLowerCase();
-            
-            // Cek Whitelist (Diam-diam)
-            if (ADMIN_WALLETS.includes(connectedAccount)) {
-              setAccount(connectedAccount);
-            } else {
-              // Jika wallet nempel tapi bukan admin
-              console.log("Wallet terdeteksi tapi bukan Admin.");
-              setAccount(null);
-            }
+            handleSetAccount(accounts[0]);
           }
         } catch (error) {
           console.error("Gagal cek koneksi:", error);
@@ -61,18 +65,11 @@ export function WalletProvider({ children }: { children: ReactNode }) {
     if (typeof window !== 'undefined' && window.ethereum) {
       window.ethereum.on('accountsChanged', (accounts: string[]) => {
         if (accounts.length > 0) {
-          const newAccount = accounts[0].toLowerCase();
-          if (ADMIN_WALLETS.includes(newAccount)) {
-            setAccount(newAccount);
-            toast.success("Akun Admin Terdeteksi");
-          } else {
-            setAccount(null);
-            toast.error("Akun diganti: Bukan Admin!");
-            // Optional: Redirect ke home jika bukan admin
-            // window.location.href = '/'; 
-          }
+          handleSetAccount(accounts[0]);
+          toast.success("Akun Wallet Diganti");
         } else {
           setAccount(null);
+          setIsAdmin(false);
           toast.success("Wallet Disconnected");
         }
       });
@@ -83,17 +80,17 @@ export function WalletProvider({ children }: { children: ReactNode }) {
     if (typeof window !== 'undefined' && window.ethereum) {
       try {
         const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-        const walletAddress = accounts[0].toLowerCase();
+        const walletAddress = accounts[0];
 
-        if (ADMIN_WALLETS.includes(walletAddress)) {
-            setAccount(walletAddress);
-            toast.success("Selamat Datang Admin!");
-        } else {
-            setAccount(null);
-            toast.error("AKSES DITOLAK: Wallet Anda tidak terdaftar sebagai Admin!");
-        }
+        // --- PERUBAHAN UTAMA DI SINI ---
+        // Dulu: Jika bukan admin -> Error/Tolak
+        // Sekarang: Semua boleh masuk, nanti diatur hak aksesnya lewat role
+        
+        handleSetAccount(walletAddress);
+        toast.success("Wallet Terhubung!");
 
       } catch (err) {
+        console.error(err);
         toast.error("Gagal menghubungkan wallet.");
       }
     } else {
@@ -103,7 +100,8 @@ export function WalletProvider({ children }: { children: ReactNode }) {
 
   const disconnectWallet = () => {
     setAccount(null);
-    toast.success("Wallet Admin Disconnected");
+    setIsAdmin(false);
+    toast.success("Wallet Terputus");
   };
 
   return (
@@ -111,7 +109,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
         account, 
         connectWallet, 
         disconnectWallet,
-        isAdmin: !!account 
+        isAdmin // Flag ini bisa dipakai untuk proteksi tombol khusus admin
     }}>
       {children}
     </WalletContext.Provider>
